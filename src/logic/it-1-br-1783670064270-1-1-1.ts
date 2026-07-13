@@ -1,3 +1,8 @@
+export interface MealEvaluation {
+  rating: number;
+  comment?: string;
+}
+
 export function validateMealEvaluation(evaluation: any): boolean {
   if (!evaluation) return false;
   if (typeof evaluation.rating !== 'number' || evaluation.rating < 1 || evaluation.rating > 5) {
