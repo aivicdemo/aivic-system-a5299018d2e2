@@ -1,0 +1,34 @@
+{
+  "meals": [
+    {
+      "id": "meal-001",
+      "date": "2024/01/15",
+      "menu": "鶏肉とブロッコリーの炒め",
+      "rating": 4,
+      "cookingTime": 25,
+      "ingredients": "鶏肉, ブロッコリー, 塩, こしょう",
+      "category": "和食",
+      "servings": 4,
+      "members": ["1", "2", "3", "4"]
+    },
+    {
+      "id": "meal-002",
+      "date": "2024/01/16",
+      "menu": "サーモンのグリル",
+      "rating": 5,
+      "cookingTime": 20,
+      "ingredients": "サーモン, レモン, オリーブオイル",
+      "category": "洋食",
+      "servings": 4,
+      "members": ["1", "2", "3", "4"]
+    }
+  ],
+  "familyMembers": [
+    { "id": "1", "name": "父", "allergies": [], "restrictions": [] },
+    { "id": "2", "name": "母", "allergies": ["卵"], "restrictions": ["ベジタリアン対応"] },
+    { "id": "3", "name": "子1", "allergies": ["乳製品"], "restrictions": [] },
+    { "id": "4", "name": "子2", "allergies": ["エビ"], "restrictions": ["グルテンフリー"] }
+  ],
+  "allergies": ["卵", "乳製品", "エビ"],
+  "restrictions": ["ベジタリアン対応", "グルテンフリー"]
+}

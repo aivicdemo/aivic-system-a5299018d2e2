@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>献立一覧・生成画面</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    header { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    h1 { color: #333; margin-bottom: 10px; }
+    .generation-section { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: 600; color: #333; }
+    input[type="number"], input[type="text"], select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+    input[type="number"]:focus, input[type="text"]:focus, select:focus { outline: none; border-color: #4CAF50; box-shadow: 0 0 5px rgba(76,175,80,0.3); }
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; }
+    .checkbox-item { display: flex; align-items: center; }
+    .checkbox-item input[type="checkbox"] { margin-right: 8px; cursor: pointer; }
+    .checkbox-item label { margin: 0; cursor: pointer; }
+    button { background: #4CAF50; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: 600; }
+    button:hover { background: #45a049; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    .error-message { color: #d32f2f; font-size: 14px; margin-top: 5px; }
+    .success-message { color: #388e3c; font-size: 14px; margin-top: 5px; }
+    .meals-section { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .meals-title { font-size: 20px; font-weight: 600; color: #333; margin-bottom: 20px; }
+    .empty-message { text-align: center; padding: 40px; color: #999; font-size: 16px; }
+    .meal-card { background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+    .meal-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .meal-date { font-weight: 600; color: #333; font-size: 16px; }
+    .meal-rating { color: #ff9800; font-weight: 600; }
+    .meal-menu { color: #666; margin-bottom: 10px; }
+    .meal-actions { display: flex; gap: 10px; margin-top: 10px; }
+    .meal-actions button { padding: 8px 16px; font-size: 14px; }
+    .btn-detail { background: #2196F3; }
+    .btn-detail:hover { background: #0b7dda; }
+    .btn-edit { background: #ff9800; }
+    .btn-edit:hover { background: #e68900; }
+    .btn-delete { background: #d32f2f; }
+    .btn-delete:hover { background: #c62828; }
+    .allergy-info { background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 10px; margin-bottom: 15px; font-size: 14px; }
+    .allergy-info strong { color: #ff6f00; }
+    .restriction-info { background: #e3f2fd; border: 1px solid #2196F3; border-radius: 4px; padding: 10px; margin-bottom: 15px; font-size: 14px; }
+    .restriction-info strong { color: #1976d2; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: white; padding: 30px; border-radius: 8px; max-width: 400px; text-align: center; }
+    .modal-content h2 { margin-bottom: 15px; color: #333; }
+    .modal-content p { margin-bottom: 20px; color: #666; }
+    .modal-actions { display: flex; gap: 10px; justify-content: center; }
+    .modal-actions button { padding: 10px 20px; }
+    .btn-cancel { background: #999; }
+    .btn-cancel:hover { background: #777; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>献立一覧・生成画面</h1>
+      <p>家族の食事計画を管理します</p>
+    </header>
+
+    <div class="generation-section">
+      <h2>新規献立生成</h2>
+      
+      <div class="form-group">
+        <label>家族成員を選択</label>
+        <div class="checkbox-group" id="familyMembers">
+          <!-- 動的に生成 -->
+        </div>
+        <div class="error-message" id="familyError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="generationDays">生成日数</label>
+        <input type="number" id="generationDays" min="1" max="30" value="7" placeholder="1-30">
+        <div class="error-message" id="daysError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="excludeIngredients">除外食材（カンマ区切り）</label>
+        <input type="text" id="excludeIngredients" placeholder="例：えび, ナッツ類">
+        <div class="error-message" id="excludeError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="mealCategory">食事カテゴリ</label>
+        <select id="mealCategory">
+          <option value="">指定なし</option>
+          <option value="和食">和食</option>
+          <option value="洋食">洋食</option>
+          <option value="中華">中華</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="cookingTime">調理時間（分以内）</label>
+        <input type="number" id="cookingTime" min="0" placeholder="例：30">
+      </div>
+
+      <div class="form-group">
+        <label for="servings">人数</label>
+        <input type="number" id="servings" min="1" value="4" placeholder="例：4">
+      </div>
+
+      <button onclick="generateMeals()">献立を生成</button>
+      <div class="success-message" id="successMessage"></div>
+    </div>
+
+    <div class="meals-section">
+      <div class="allergy-info" id="allergyInfo" style="display:none;">
+        <strong>アレルギー情報:</strong> <span id="allergyList"></span>
+      </div>
+      <div class="restriction-info" id="restrictionInfo" style="display:none;">
+        <strong>食事制限:</strong> <span id="restrictionList"></span>
+      </div>
+
+      <div class="meals-title">献立一覧</div>
+      <div id="mealsList">
+        <div class="empty-message">献立がまだ登録されていません。新しい献立を生成してください。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="deleteModal">
+    <div class="modal-content">
+      <h2>献立を削除しますか？</h2>
+      <p>この操作は取り消せません。</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="cancelDelete()">キャンセル</button>
+        <button class="btn-delete" onclick="confirmDelete()">削除</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let meals = [];
+    let deleteTargetId = null;
+    let familyMembers = [];
+
+    function initPage() {
+      loadMeals();
+      loadFamilyMembers();
+      loadAllergyInfo();
+      loadRestrictionInfo();
+    }
+
+    function loadFamilyMembers() {
+      const mockMembers = [
+        { id: '1', name: '父' },
+        { id: '2', name: '母' },
+        { id: '3', name: '子1' },
+        { id: '4', name: '子2' }
+      ];
+      familyMembers = mockMembers;
+      const container = document.getElementById('familyMembers');
+      container.innerHTML = mockMembers.map(m => `
+        <div class="checkbox-item">
+          <input type="checkbox" id="member_${m.id}" value="${m.id}">
+          <label for="member_${m.id}">${m.name}</label>
+        </div>
+      `).join('');
+    }
+
+    function loadAllergyInfo() {
+      const allergies = ['卵', '乳製品', 'エビ'];
+      if (allergies.length > 0) {
+        document.getElementById('allergyInfo').style.display = 'block';
+        document.getElementById('allergyList').textContent = allergies.join(', ');
+      }
+    }
+
+    function loadRestrictionInfo() {
+      const restrictions = ['ベジタリアン対応', 'グルテンフリー'];
+      if (restrictions.length > 0) {
+        document.getElementById('restrictionInfo').style.display = 'block';
+        document.getElementById('restrictionList').textContent = restrictions.join(', ');
+      }
+    }
+
+    function loadMeals() {
+      const stored = localStorage.getItem('meals');
+      meals = stored ? JSON.parse(stored) : [];
+      renderMeals();
+    }
+
+    function saveMeals() {
+      localStorage.setItem('meals', JSON.stringify(meals));
+    }
+
+    function renderMeals() {
+      const container = document.getElementById('mealsList');
+      if (meals.length === 0) {
+        container.innerHTML = '<div class="empty-message">献立がまだ登録されていません。新しい献立を生成してください。</div>';
+        return;
+      }
+      container.innerHTML = meals.map(meal => `
+        <div class="meal-card">
+          <div class="meal-card-header">
+            <span class="meal-date">${meal.date}</span>
+            <span class="meal-rating">評価: ${meal.rating || 0}/5</span>
+          </div>
+          <div class="meal-menu"><strong>メニュー:</strong> ${meal.menu || 'N/A'}</div>
+          <div class="meal-menu"><strong>調理時間:</strong> ${meal.cookingTime || 'N/A'}分</div>
+          <div class="meal-menu"><strong>食材:</strong> ${meal.ingredients || 'N/A'}</div>
+          <div class="meal-actions">
+            <button class="btn-detail" onclick="viewDetail('${meal.id}')">詳細</button>
+            <button class="btn-edit" onclick="editMeal('${meal.id}')">編集</button>
+            <button class="btn-delete" onclick="showDeleteConfirm('${meal.id}')">削除</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function generateMeals() {
+      clearErrors();
+      const selectedMembers = Array.from(document.querySelectorAll('#familyMembers input:checked')).map(el => el.value);
+      const days = parseInt(document.getElementById('generationDays').value) || 0;
+      const excludeIngredients = document.getElementById('excludeIngredients').value;
+      const category = document.getElementById('mealCategory').value;
+      const cookingTime = document.getElementById('cookingTime').value;
+      const servings = parseInt(document.getElementById('servings').value) || 1;
+
+      let hasError = false;
+
+      if (selectedMembers.length === 0) {
+        document.getElementById('familyError').textContent = '家族成員を選択してください';
+        hasError = true;
+      }
+
+      if (days <= 0) {
+        document.getElementById('daysError').textContent = '生成日数は1以上の正の整数を入力してください';
+        hasError = true;
+      }
+
+      if (days > 30) {
+        document.getElementById('daysError').textContent = '生成日数は30日以内で指定してください';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      const newMeals = [];
+      const today = new Date();
+      const mockMenus = [
+        { name: '鶏肉とブロッコリーの炒め', time: 25, ingredients: '鶏肉, ブロッコリー, 塩, こしょう', category: '和食' },
+        { name: 'サーモンのグリル', time: 20, ingredients: 'サーモン, レモン, オリーブオイル', category: '洋食' },
+        { name: 'ビーフステーキ', time: 30, ingredients: '牛肉, 塩, こしょう, バター', category: '洋食' },
+        { name: '豚肉の味噌煮', time: 35, ingredients: '豚肉, 味噌, 砂糖, 醤油', category: '和食' },
+        { name: 'チキンカレー', time: 40, ingredients: '鶏肉, カレー粉, 玉ねぎ, ニンジン', category: '中華' }
+      ];
+
+      for (let i = 0; i < days; i++) {
+        const date = new Date(today);
+        date.setDate(date.getDate() + i);
+        const dateStr = date.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
+        const menu = mockMenus[i % mockMenus.length];
+        newMeals.push({
+          id: Date.now().toString() + i,
+          date: dateStr,
+          menu: menu.name,
+          rating: Math.floor(Math.random() * 5) + 1,
+          cookingTime: menu.time,
+          ingredients: menu.ingredients,
+          category: menu.category,
+          servings: servings,
+          members: selectedMembers
+        });
+      }
+
+      meals = [...newMeals, ...meals];
+      saveMeals();
+      renderMeals();
+      document.getElementById('successMessage').textContent = `${days}日分の献立を生成しました！`;
+      setTimeout(() => {
+        document.getElementById('successMessage').textContent = '';
+      }, 3000);
+    }
+
+    function clearErrors() {
+      document.getElementById('familyError').textContent = '';
+      document.getElementById('daysError').textContent = '';
+      document.getElementById('excludeError').textContent = '';
+    }
+
+    function viewDetail(id) {
+      const meal = meals.find(m => m.id === id);
+      if (meal) {
+        localStorage.setItem('selectedMeal', JSON.stringify(meal));
+        window.location.href = './itg-1-scen-367.html';
+      }
+    }
+
+    function editMeal(id) {
+      const meal = meals.find(m => m.id === id);
+      if (meal) {
+        localStorage.setItem('editingMeal', JSON.stringify(meal));
+        window.location.href = './itg-1-scen-368.html';
+      }
+    }
+
+    function showDeleteConfirm(id) {
+      deleteTargetId = id;
+      document.getElementById('deleteModal').classList.add('active');
+    }
+
+    function cancelDelete() {
+      deleteTargetId = null;
+      document.getElementById('deleteModal').classList.remove('active');
+    }
+
+    function confirmDelete() {
+      if (deleteTargetId) {
+        meals = meals.filter(m => m.id !== deleteTargetId);
+        saveMeals();
+        renderMeals();
+        deleteTargetId = null;
+        document.getElementById('deleteModal').classList.remove('active');
+      }
+    }
+
+    initPage();
+  </script>
+</body>
+</html>
