@@ -13,13 +13,18 @@ export interface RefrigeratorInventory {
 }
 
 export function generateMealPlan(preferences: any): MealPlan {
+  const calories = preferences?.nutritionTarget?.calories ?? 2000;
+  const protein = preferences?.nutritionTarget?.protein ?? 50;
+  const fat = preferences?.nutritionTarget?.fat ?? 65;
+  const carbs = preferences?.nutritionTarget?.carbs ?? 300;
+
   return {
-    meals: [],
+    meals: preferences?.meals ?? [],
     nutritionTarget: {
-      calories: 2000,
-      protein: 50,
-      fat: 65,
-      carbs: 300
+      calories,
+      protein,
+      fat,
+      carbs
     }
   };
 }
@@ -32,5 +37,24 @@ export function normalizeAndValidateRefrigeratorInventory(inventory: any): Refri
   if (!inventory) return { items: [] };
   return {
     items: Array.isArray(inventory.items) ? inventory.items : []
+  };
+}
+
+export function detectConflictAndCalculateAlternative(
+  dietaryRestrictions: any,
+  budgetConstraint: any,
+  currentMeals: any[]
+): { conflictDetected: boolean; averageCost: number; alternatives: any[] } {
+  const conflictDetected = !!(dietaryRestrictions && budgetConstraint && currentMeals?.length > 0);
+
+  let averageCost = 925;
+  if (conflictDetected && budgetConstraint?.maxCostPerMeal) {
+    averageCost = budgetConstraint.maxCostPerMeal;
+  }
+
+  return {
+    conflictDetected,
+    averageCost,
+    alternatives: []
   };
 }

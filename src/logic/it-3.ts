@@ -50,3 +50,10 @@ export function compareAlgorithmImprovementEffects(
     overallScore: Math.round(overallScore * 100) / 100
   };
 }
+
+/**
+ * Format ISO timestamp to remove milliseconds
+ */
+export function formatTimestamp(timestamp: string): string {
+  return timestamp.replace(/\.\d{3}Z$/, 'Z');
+}
