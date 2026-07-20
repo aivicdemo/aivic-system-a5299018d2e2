@@ -48,8 +48,8 @@ export function detectConflictAndCalculateAlternative(
   const conflictDetected = !!(dietaryRestrictions && budgetConstraint && currentMeals?.length > 0);
 
   let averageCost = 925;
-  if (conflictDetected && budgetConstraint?.maxCostPerMeal) {
-    averageCost = budgetConstraint.maxCostPerMeal;
+  if (conflictDetected && budgetConstraint?.maxCostPerMeal && currentMeals?.length > 0) {
+    averageCost = Math.round((budgetConstraint.maxCostPerMeal / currentMeals.length) * 100) / 100;
   }
 
   return {
