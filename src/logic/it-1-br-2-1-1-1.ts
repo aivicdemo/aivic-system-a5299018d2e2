@@ -1,5 +1,5 @@
 export function validateNutritionIntakeData(data: any): boolean {
-  if (!data) return false;
+  if (!data || typeof data !== 'object') return false;
   if (typeof data.calories !== 'number' || data.calories < 0) {
     return false;
   }
