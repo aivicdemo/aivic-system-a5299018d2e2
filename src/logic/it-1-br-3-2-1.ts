@@ -17,12 +17,12 @@ export function determineVariablePriority(variables: any[]): any[] {
       return effectB - effectA;
     }
     
-    // Tertiary sort: family preference risk (descending)
+    // Tertiary sort: family preference risk (ascending)
     const riskA = a.familyPreferenceRisk || 0;
     const riskB = b.familyPreferenceRisk || 0;
     
-    if (riskB !== riskA) {
-      return riskB - riskA;
+    if (riskA !== riskB) {
+      return riskA - riskB;
     }
     
     // Quaternary sort: id (ascending, lexicographic)
