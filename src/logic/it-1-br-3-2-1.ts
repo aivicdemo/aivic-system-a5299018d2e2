@@ -17,12 +17,12 @@ export function determineVariablePriority(variables: any[]): any[] {
       return effectB - effectA;
     }
     
-    // Tertiary sort: id (ascending, lexicographic)
+    // Tertiary sort: id (descending, lexicographic)
     const idA = a.id || "";
     const idB = b.id || "";
     
-    if (idA < idB) return -1;
-    if (idA > idB) return 1;
+    if (idA > idB) return -1;
+    if (idA < idB) return 1;
     return 0;
   });
 }
