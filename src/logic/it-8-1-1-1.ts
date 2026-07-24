@@ -13,19 +13,19 @@ export function determineInterviewSampleSize(
   let adjustedSize = baseSize;
 
   if (targetSegment === 'homemaker') {
-    adjustedSize = 40;
+    adjustedSize = 50;
   }
 
   if (filters.age) {
-    adjustedSize -= 3;
+    adjustedSize -= 8;
   }
 
   if (filters.familyComposition) {
-    adjustedSize -= 2;
+    adjustedSize -= 5;
   }
 
   if (filters.dietaryRestriction) {
-    adjustedSize -= 1;
+    adjustedSize -= 3;
   }
 
   return adjustedSize;
