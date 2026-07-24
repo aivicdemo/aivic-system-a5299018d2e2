@@ -41,5 +41,5 @@ export function calculateDifferentiationScoreByPainFactor(
   const totalScore = painFactors.reduce((sum, pf) => sum + (pf.responseScore || 0), 0);
   const averageScore = totalScore / painFactors.length;
 
-  return Math.round(averageScore * 1.3);
+  return Math.round(averageScore * 1.5);
 }
