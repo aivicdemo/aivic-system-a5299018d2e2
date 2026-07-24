@@ -3,5 +3,5 @@ export function calculatePredictionAccuracy(predictions: number[], actual: numbe
   if (predictions.length !== actual.length) return 0;
   const matches = predictions.filter((p, i) => p === actual[i]).length;
   const accuracy = (matches / predictions.length) * 100;
-  return Math.round(accuracy * 100) / 100;
+  return Math.round(accuracy) / 100;
 }
