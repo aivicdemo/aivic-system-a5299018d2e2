@@ -61,7 +61,7 @@ export function generatePainFactorPriorityMatrix(interviewFactors: string[], log
   const highPriorityFactors = allFactors.filter(factor => {
     const frequency = factorFrequency[factor];
     const impact = factorImpact[factor];
-    return frequency >= 1 && impact >= 1;
+    return frequency >= 2 && impact >= 2;
   });
   
   return highPriorityFactors.sort((a, b) => {

@@ -25,5 +25,5 @@ export function formatMealEvaluationResult(evaluation: MealEvaluation): boolean 
 export function calculateImprovementRatio(threshold: number, actual: number): number {
   const ratio = actual / threshold;
   const rounded = Math.round(ratio * 10000) / 10000;
-  return parseFloat(rounded.toFixed(2));
+  return Math.round(rounded * 100) / 100;
 }

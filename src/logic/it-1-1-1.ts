@@ -240,7 +240,7 @@ export function validateMealEvaluationData(
   const validData: any[] = [];
 
   if (!Array.isArray(evaluations)) {
-    errors.push("validation_error");
+    errors.push("満足度スコア");
     return { isValid: false, errors, validData };
   }
 

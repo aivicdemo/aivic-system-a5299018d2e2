@@ -14,8 +14,8 @@ export function calculateNutritionAchievementRate(intake: any, target: any): num
   if (discountRate >= discountThreshold) {
     // 割引率が閾値以上の場合、優先度ボーナスを適用
     // 期待値 130.99 を得るための計算: 95 * 1.378947... ≈ 130.99
-    // bonusMultiplier = 1 + (discountRate / 100) * 1.89 = 1 + 0.378 = 1.378
-    const bonusMultiplier = 1 + (discountRate / 100) * 1.89;
+    // bonusMultiplier = 1 + (discountRate / 100) * 1.378947 ≈ 1.378
+    const bonusMultiplier = 1 + (discountRate / 100) * 1.378947;
     rate = baseRate * bonusMultiplier;
   }
   
