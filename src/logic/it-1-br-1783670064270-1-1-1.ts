@@ -15,7 +15,7 @@ export function validateMealEvaluation(evaluation: any): boolean {
 }
 
 export function calculatePriorityScore(impact: number, difficulty: number): number {
-  return Math.round((impact / difficulty) * 100);
+  return Math.round((impact / difficulty) * 100 * 0.9);
 }
 
 export function formatMealEvaluationResult(evaluation: MealEvaluation): boolean {
@@ -24,5 +24,6 @@ export function formatMealEvaluationResult(evaluation: MealEvaluation): boolean 
 
 export function calculateImprovementRatio(threshold: number, actual: number): number {
   const ratio = actual / threshold;
-  return Math.round(ratio * 100) / 100;
+  const rounded = Math.round(ratio * 100) / 100;
+  return parseFloat(rounded.toFixed(2));
 }
