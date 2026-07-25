@@ -13,3 +13,16 @@ export function validateMealEvaluation(evaluation: any): boolean {
   }
   return true;
 }
+
+export function calculatePriorityScore(impact: number, difficulty: number): number {
+  return Math.round((impact / difficulty) * 100);
+}
+
+export function formatMealEvaluationResult(evaluation: MealEvaluation): boolean {
+  return validateMealEvaluation(evaluation);
+}
+
+export function calculateImprovementRatio(threshold: number, actual: number): number {
+  const ratio = actual / threshold;
+  return Math.round(ratio * 100) / 100;
+}
