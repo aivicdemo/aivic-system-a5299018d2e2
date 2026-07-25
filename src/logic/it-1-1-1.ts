@@ -49,7 +49,7 @@ export function detectConflictAndCalculateAlternative(
 
   let averageCost = 925;
   if (conflictDetected && budgetConstraint?.maxCostPerMeal && currentMeals?.length > 0) {
-    averageCost = Math.round((budgetConstraint.maxCostPerMeal * 100) / (currentMeals.length * 100)) * 100 / 100;
+    averageCost = (budgetConstraint.maxCostPerMeal * currentMeals.length) / currentMeals.length;
     averageCost = parseFloat(averageCost.toFixed(2));
   }
 
@@ -174,7 +174,7 @@ export function recalculatePainFactorMatrix(
       adjustedCount++;
       return {
         ...factor,
-        impact: Math.max(1, (factor.impact || 1) - 1)
+        impact: Math.max(1, (factor.impact || 1) - 0.25)
       };
     }
     return factor;
