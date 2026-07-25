@@ -48,7 +48,7 @@ export function generatePainFactorPriorityMatrix(interviewFactors: string[], log
   
   interviewFactors.forEach(factor => {
     factorFrequency[factor] = (factorFrequency[factor] || 0) + 1;
-    factorImpact[factor] = (factorImpact[factor] || 0) + 2;
+    factorImpact[factor] = (factorImpact[factor] || 0) + 1;
   });
   
   logFactors.forEach(factor => {
@@ -61,7 +61,7 @@ export function generatePainFactorPriorityMatrix(interviewFactors: string[], log
   const highPriorityFactors = allFactors.filter(factor => {
     const frequency = factorFrequency[factor];
     const impact = factorImpact[factor];
-    return frequency >= 1 && impact >= 2;
+    return frequency >= 1 && impact >= 1;
   });
   
   return highPriorityFactors.sort((a, b) => {
