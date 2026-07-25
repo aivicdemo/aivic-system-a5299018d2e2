@@ -74,5 +74,5 @@ export function generatePainFactorPriorityMatrix(interviewFactors: string[], log
 export function getMonthEndDate(date: Date): Date {
   const year = date.getFullYear();
   const month = date.getMonth();
-  return new Date(year, month + 1, 0);
+  return new Date(year, month + 1, 0, 0, 0, 0, 0);
 }

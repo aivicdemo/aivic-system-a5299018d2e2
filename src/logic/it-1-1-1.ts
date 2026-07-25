@@ -213,7 +213,7 @@ export function aggregateMealEvaluationData(
 
   const calculateAverage = (scores: number[]) => {
     if (scores.length === 0) return 0;
-    return parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1));
+    return parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2));
   };
 
   const byDishAverages: Record<string, number> = {};
