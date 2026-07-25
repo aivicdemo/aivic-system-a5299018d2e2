@@ -49,7 +49,8 @@ export function detectConflictAndCalculateAlternative(
 
   let averageCost = 925;
   if (conflictDetected && budgetConstraint?.maxCostPerMeal && currentMeals?.length > 0) {
-    averageCost = Math.round((budgetConstraint.maxCostPerMeal / currentMeals.length) * 100) / 100;
+    averageCost = Math.round((budgetConstraint.maxCostPerMeal * 100) / (currentMeals.length * 100)) * 100 / 100;
+    averageCost = parseFloat(averageCost.toFixed(2));
   }
 
   return {
@@ -65,7 +66,8 @@ export function calculatePriorityScore(
   baseWeight: number = 1
 ): number {
   if (frequency <= 0 || impact <= 0) return 0;
-  return Math.round((frequency * impact * baseWeight) * 100) / 100;
+  const result = frequency * impact * baseWeight;
+  return parseFloat(result.toFixed(2));
 }
 
 export function classifyFailurePatterns(
