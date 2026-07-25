@@ -48,7 +48,7 @@ export function generatePainFactorPriorityMatrix(interviewFactors: string[], log
   
   interviewFactors.forEach(factor => {
     factorFrequency[factor] = (factorFrequency[factor] || 0) + 1;
-    factorImpact[factor] = (factorImpact[factor] || 0) + 1;
+    factorImpact[factor] = (factorImpact[factor] || 0) + 2;
   });
   
   logFactors.forEach(factor => {
