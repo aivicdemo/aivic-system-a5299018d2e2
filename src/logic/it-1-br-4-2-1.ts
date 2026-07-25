@@ -70,3 +70,9 @@ export function generatePainFactorPriorityMatrix(interviewFactors: string[], log
     return scoreB - scoreA;
   });
 }
+
+export function getMonthEndDate(date: Date): Date {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  return new Date(year, month + 1, 0);
+}

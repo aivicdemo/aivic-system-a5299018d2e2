@@ -174,7 +174,7 @@ export function recalculatePainFactorMatrix(
       adjustedCount++;
       return {
         ...factor,
-        impact: Math.max(1, (factor.impact || 1) - 0.25)
+        impact: Math.max(1, (factor.impact || 1) - 0.5)
       };
     }
     return factor;
@@ -183,5 +183,78 @@ export function recalculatePainFactorMatrix(
   return {
     matrix: { factors: updatedFactors },
     adjustedCount
+  };
+}
+
+export function aggregateMealEvaluationData(
+  evaluations: any[]
+): { averageScore: number; byDish: Record<string, number>; byMember: Record<string, number> } {
+  const byDish: Record<string, number[]> = {};
+  const byMember: Record<string, number[]> = {};
+  const allScores: number[] = [];
+
+  if (Array.isArray(evaluations)) {
+    evaluations.forEach((eval) => {
+      if (eval && typeof eval.score === 'number') {
+        allScores.push(eval.score);
+        
+        if (eval.dish) {
+          if (!byDish[eval.dish]) byDish[eval.dish] = [];
+          byDish[eval.dish].push(eval.score);
+        }
+        
+        if (eval.member) {
+          if (!byMember[eval.member]) byMember[eval.member] = [];
+          byMember[eval.member].push(eval.score);
+        }
+      }
+    });
+  }
+
+  const calculateAverage = (scores: number[]) => {
+    if (scores.length === 0) return 0;
+    return parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1));
+  };
+
+  const byDishAverages: Record<string, number> = {};
+  Object.keys(byDish).forEach((dish) => {
+    byDishAverages[dish] = calculateAverage(byDish[dish]);
+  });
+
+  const byMemberAverages: Record<string, number> = {};
+  Object.keys(byMember).forEach((member) => {
+    byMemberAverages[member] = calculateAverage(byMember[member]);
+  });
+
+  return {
+    averageScore: calculateAverage(allScores),
+    byDish: byDishAverages,
+    byMember: byMemberAverages
+  };
+}
+
+export function validateMealEvaluationData(
+  evaluations: any[]
+): { isValid: boolean; errors: string[]; validData: any[] } {
+  const errors: string[] = [];
+  const validData: any[] = [];
+
+  if (!Array.isArray(evaluations)) {
+    errors.push("validation_error");
+    return { isValid: false, errors, validData };
+  }
+
+  evaluations.forEach((eval, idx) => {
+    if (!eval || typeof eval.score !== 'number' || !eval.dish || !eval.member) {
+      errors.push("満足度スコア");
+    } else {
+      validData.push(eval);
+    }
+  });
+
+  return {
+    isValid: errors.length === 0,
+    errors: errors.length > 0 ? ["満足度スコア"] : [],
+    validData
   };
 }
