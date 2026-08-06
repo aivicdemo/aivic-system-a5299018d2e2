@@ -21,3 +21,13 @@ export function calculateNutritionAchievementRate(intake: any, target: any): num
   
   return Math.min(rate, 100);
 }
+
+export function canSendReport(userId: string, reportDate: string, lastSentDate: string | null): boolean {
+  if (!userId || !reportDate) return false;
+  if (!lastSentDate) return true;
+  return reportDate !== lastSentDate;
+}
+
+export function shouldRejectOnQueryTimeout(hasTimeout: boolean): boolean {
+  return hasTimeout;
+}
