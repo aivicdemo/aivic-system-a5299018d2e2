@@ -16,12 +16,8 @@
       padding: 20px;
     }
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      padding: 30px;
     }
     h1 {
       color: #333;
@@ -29,84 +25,67 @@
       font-size: 28px;
     }
     .deadline-section {
-      background-color: #fff3cd;
-      border: 1px solid #ffc107;
-      border-radius: 4px;
+      background-color: white;
+      border-radius: 8px;
       padding: 20px;
       margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .deadline-section h2 {
-      color: #856404;
-      font-size: 16px;
+    .deadline-label {
+      color: #666;
+      font-size: 14px;
       margin-bottom: 10px;
     }
-    .deadline-text {
-      color: #856404;
-      font-size: 18px;
+    .deadline-badge {
+      display: inline-block;
+      background-color: #ff6b6b;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 16px;
       font-weight: bold;
     }
     .summary-section {
-      margin-top: 30px;
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .summary-section h2 {
+    .summary-title {
       color: #333;
-      font-size: 20px;
+      font-size: 18px;
       margin-bottom: 20px;
+      font-weight: 600;
     }
     .summary-table {
       width: 100%;
       border-collapse: collapse;
-      background-color: white;
     }
     .summary-table th {
-      background-color: #007bff;
-      color: white;
+      background-color: #f9f9f9;
+      color: #333;
       padding: 12px;
       text-align: left;
+      border-bottom: 2px solid #ddd;
       font-weight: 600;
-      border: 1px solid #ddd;
     }
     .summary-table td {
       padding: 12px;
-      border: 1px solid #ddd;
-      color: #555;
-    }
-    .summary-table tr:nth-child(even) {
-      background-color: #f9f9f9;
+      border-bottom: 1px solid #ddd;
+      color: #666;
     }
     .summary-table tr:hover {
-      background-color: #f0f0f0;
+      background-color: #f9f9f9;
     }
-    .status-badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 3px;
-      font-size: 12px;
-      font-weight: 600;
+    .submission-rate {
+      font-weight: bold;
+      color: #28a745;
     }
-    .status-submitted {
-      background-color: #d4edda;
-      color: #155724;
+    .submission-rate.low {
+      color: #ff6b6b;
     }
-    .status-pending {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-    .nav-button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.3s;
-    }
-    .nav-button:hover {
-      background-color: #0056b3;
+    .submission-rate.medium {
+      color: #ffc107;
     }
   </style>
 </head>
@@ -115,12 +94,12 @@
     <h1>日報提出状況ダッシュボード</h1>
     
     <div class="deadline-section">
-      <h2>提出期限</h2>
-      <div class="deadline-text" id="deadlineText">2024年12月31日 17:00</div>
+      <div class="deadline-label">提出期限</div>
+      <div class="deadline-badge" id="deadlineDisplay">2024年12月31日 17:00</div>
     </div>
     
     <div class="summary-section">
-      <h2>部門別提出状況サマリー</h2>
+      <div class="summary-title">部門別提出状況サマリー</div>
       <table class="summary-table">
         <thead>
           <tr>
@@ -128,57 +107,48 @@
             <th>提出済み</th>
             <th>未提出</th>
             <th>提出率</th>
-            <th>ステータス</th>
           </tr>
         </thead>
-        <tbody id="summaryBody">
+        <tbody id="summaryTableBody">
           <tr>
             <td>営業部</td>
             <td>8</td>
             <td>2</td>
-            <td>80%</td>
-            <td><span class="status-badge status-submitted">提出済</span></td>
+            <td><span class="submission-rate">80%</span></td>
           </tr>
           <tr>
             <td>企画部</td>
             <td>5</td>
             <td>1</td>
-            <td>83%</td>
-            <td><span class="status-badge status-submitted">提出済</span></td>
+            <td><span class="submission-rate">83%</span></td>
           </tr>
           <tr>
             <td>技術部</td>
-            <td>6</td>
-            <td>3</td>
-            <td>67%</td>
-            <td><span class="status-badge status-pending">未提出</span></td>
+            <td>10</td>
+            <td>0</td>
+            <td><span class="submission-rate">100%</span></td>
           </tr>
           <tr>
             <td>管理部</td>
-            <td>4</td>
-            <td>0</td>
-            <td>100%</td>
-            <td><span class="status-badge status-submitted">提出済</span></td>
+            <td>3</td>
+            <td>2</td>
+            <td><span class="submission-rate medium">60%</span></td>
           </tr>
         </tbody>
       </table>
     </div>
-    
-    <button class="nav-button" onclick="goToDailyReport()">日報入力・送信へ</button>
   </div>
   
   <script>
-    function goToDailyReport() {
-      window.location.href = './daily-report.html';
-    }
-    
-    function initPage() {
-      // Set deadline to tomorrow at 17:00
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(17, 0, 0, 0);
+    // Initialize dashboard
+    function init() {
+      // Set deadline display
+      const deadline = new Date();
+      deadline.setDate(deadline.getDate() + 7);
+      deadline.setHours(17, 0, 0, 0);
       
-      const deadlineText = tomorrow.toLocaleString('ja-JP', {
+      const deadlineDisplay = document.getElementById('deadlineDisplay');
+      deadlineDisplay.textContent = deadline.toLocaleString('ja-JP', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
@@ -186,10 +156,40 @@
         minute: '2-digit'
       });
       
-      document.getElementById('deadlineText').textContent = deadlineText;
+      // Load and display summary data
+      loadSummaryData();
     }
     
-    window.addEventListener('DOMContentLoaded', initPage);
+    function loadSummaryData() {
+      // This would normally load from API
+      // For now, using static data that's already in the HTML
+      const tableBody = document.getElementById('summaryTableBody');
+      
+      // Calculate submission rates and apply styling
+      const rows = tableBody.querySelectorAll('tr');
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 4) {
+          const submitted = parseInt(cells[1].textContent);
+          const notSubmitted = parseInt(cells[2].textContent);
+          const total = submitted + notSubmitted;
+          const rate = total > 0 ? Math.round((submitted / total) * 100) : 0;
+          
+          const rateCell = cells[3].querySelector('.submission-rate');
+          if (rateCell) {
+            rateCell.textContent = `${rate}%`;
+            rateCell.classList.remove('low', 'medium');
+            if (rate < 70) {
+              rateCell.classList.add('low');
+            } else if (rate < 90) {
+              rateCell.classList.add('medium');
+            }
+          }
+        }
+      });
+    }
+    
+    init();
   </script>
 </body>
 </html>
