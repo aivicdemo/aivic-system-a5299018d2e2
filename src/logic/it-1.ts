@@ -112,10 +112,10 @@ export function identifyReportingStatus(data: SubmissionStatus): SubmissionStatu
     };
   }
 
-  const submitted_count = data.submitted_count ?? 0;
-  const total_members = data.total_members ?? 0;
-  const absent_members = Array.isArray(data.absent_members) ? data.absent_members : [];
-  const delayed_members = Array.isArray(data.delayed_members) ? data.delayed_members : [];
+  const submitted_count = (data as any).submitted_count ?? 0;
+  const total_members = (data as any).total_members ?? 0;
+  const absent_members = Array.isArray((data as any).absent_members) ? (data as any).absent_members : [];
+  const delayed_members = Array.isArray((data as any).delayed_members) ? (data as any).delayed_members : [];
 
   return {
     all_submitted: submitted_count === total_members && delayed_members.length === 0,
@@ -145,11 +145,12 @@ export function executePromptionLoop(data: AuditEvent): AuditEvent {
     };
   }
 
+  const typedData = data as any;
   return {
-    event_id: data.event_id ?? '',
-    event_type: data.event_type ?? 'promption_loop',
-    timestamp: data.timestamp instanceof Date ? data.timestamp : new Date(),
-    execution_details: data.execution_details ?? {
+    event_id: typedData.event_id ?? '',
+    event_type: typedData.event_type ?? 'promption_loop',
+    timestamp: typedData.timestamp instanceof Date ? typedData.timestamp : new Date(),
+    execution_details: typedData.execution_details ?? {
       check_time: '',
       meeting_start_time: '',
       department_id: '',
@@ -171,10 +172,11 @@ export function formatReportListWithPagination(data: DailyReport): DailyReport {
     };
   }
 
+  const typedData = data as any;
   return {
-    yesterday_achievement: data.yesterday_achievement ?? '',
-    today_plan: data.today_plan ?? '',
-    current_issues: data.current_issues ?? '',
+    yesterday_achievement: typedData.yesterday_achievement ?? '',
+    today_plan: typedData.today_plan ?? '',
+    current_issues: typedData.current_issues ?? '',
   };
 }
 
@@ -201,10 +203,11 @@ export function logSentMessage(data: MessageLog): MessageLog {
     };
   }
 
+  const typedData = data as any;
   return {
-    id: data.id ?? '',
-    sent_at: data.sent_at ?? new Date().toISOString(),
-    status: data.status ?? 'pending',
+    id: typedData.id ?? '',
+    sent_at: typedData.sent_at ?? new Date().toISOString(),
+    status: typedData.status ?? 'pending',
   };
 }
 
@@ -225,28 +228,30 @@ export function analyzeEscalationCondition(data: EscalationAnalysis): Escalation
     };
   }
 
+  const typedData = data as any;
   return {
-    escalation_condition: data.escalation_condition ?? 'unknown',
-    missing_users: Array.isArray(data.missing_users) ? data.missing_users : [],
-    repeated_missing_user: data.repeated_missing_user ?? {
+    escalation_condition: typedData.escalation_condition ?? 'unknown',
+    missing_users: Array.isArray(typedData.missing_users) ? typedData.missing_users : [],
+    repeated_missing_user: typedData.repeated_missing_user ?? {
       user_id: '',
       user_name: '',
       department_id: '',
       missing_count: 0,
       recent_missing_dates: [],
     },
-    ai_recommendation: data.ai_recommendation ?? '',
-    ai_confidence: data.ai_confidence ?? '',
+    ai_recommendation: typedData.ai_recommendation ?? '',
+    ai_confidence: typedData.ai_confidence ?? '',
   };
 }
 
 export function buildPromptionContext(data: PromptionContext): PromptionContext {
+  const typedData = data as any;
   return {
-    submissionStatus: data.submissionStatus,
-    unsubmittedMembers: data.unsubmittedMembers,
-    delayedMembers: data.delayedMembers,
-    submissionDeadline: data.submissionDeadline,
-    managerEmail: data.managerEmail,
+    submissionStatus: typedData.submissionStatus,
+    unsubmittedMembers: typedData.unsubmittedMembers,
+    delayedMembers: typedData.delayedMembers,
+    submissionDeadline: typedData.submissionDeadline,
+    managerEmail: typedData.managerEmail,
   };
 }
 
@@ -258,8 +263,9 @@ export function executePromptionAction(data: PromptionAction): PromptionAction {
     };
   }
 
+  const typedData = data as any;
   return {
-    action: data.action ?? '',
-    result: data.result ?? '',
+    action: typedData.action ?? '',
+    result: typedData.result ?? '',
   };
 }
