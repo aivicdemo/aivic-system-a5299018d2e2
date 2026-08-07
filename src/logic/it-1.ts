@@ -56,6 +56,33 @@ export interface MessageLog {
   status: string;
 }
 
+export interface EscalationAnalysis {
+  escalation_condition: string;
+  missing_users: Array<{ user_id: string; user_name: string; department_id: string }>;
+  repeated_missing_user: {
+    user_id: string;
+    user_name: string;
+    department_id: string;
+    missing_count: number;
+    recent_missing_dates: string[];
+  };
+  ai_recommendation: string;
+  ai_confidence: string;
+}
+
+export interface PromptionContext {
+  submissionStatus: SubmissionStatus;
+  unsubmittedMembers: Array<{ user_id: string; user_name: string; department_id: string }>;
+  delayedMembers: Array<{ user_id: string; user_name: string; department_id: string }>;
+  submissionDeadline: string;
+  managerEmail: string;
+}
+
+export interface PromptionAction {
+  action: string;
+  result: string;
+}
+
 export function analyzeFeatureUsagePattern(usageData: any): FeatureUsagePattern {
   if (!usageData || typeof usageData !== 'object') {
     return { pattern: 'unknown', frequency: 0 };
@@ -178,5 +205,61 @@ export function logSentMessage(data: any): MessageLog {
     id: data.id ?? '',
     sent_at: data.sent_at ?? new Date().toISOString(),
     status: data.status ?? 'pending',
+  };
+}
+
+export function analyzeEscalationCondition(data: any): EscalationAnalysis {
+  if (!data || typeof data !== 'object') {
+    return {
+      escalation_condition: 'unknown',
+      missing_users: [],
+      repeated_missing_user: {
+        user_id: '',
+        user_name: '',
+        department_id: '',
+        missing_count: 0,
+        recent_missing_dates: [],
+      },
+      ai_recommendation: '',
+      ai_confidence: '',
+    };
+  }
+
+  return {
+    escalation_condition: data.escalation_condition ?? 'unknown',
+    missing_users: Array.isArray(data.missing_users) ? data.missing_users : [],
+    repeated_missing_user: data.repeated_missing_user ?? {
+      user_id: '',
+      user_name: '',
+      department_id: '',
+      missing_count: 0,
+      recent_missing_dates: [],
+    },
+    ai_recommendation: data.ai_recommendation ?? '',
+    ai_confidence: data.ai_confidence ?? '',
+  };
+}
+
+export function buildPromptionContext(data: PromptionContext): PromptionContext {
+  return {
+    submissionStatus: data.submissionStatus,
+    unsubmittedMembers: data.unsubmittedMembers,
+    delayedMembers: data.delayedMembers,
+    submissionDeadline: data.submissionDeadline,
+    managerEmail: data.managerEmail,
+  };
+}
+
+export function executePromptionAction(data: any): PromptionAction {
+  if (!data || typeof data !== 'object') {
+    return {
+      action: '',
+      result: '',
+    };
+  }
+
+  return {
+    action: data.action ?? '',
+    result: data.result ?? '',
   };
 }
