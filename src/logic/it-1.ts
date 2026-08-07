@@ -83,7 +83,7 @@ export interface PromptionAction {
   result: string;
 }
 
-export function analyzeFeatureUsagePattern(usageData: any): FeatureUsagePattern {
+export function analyzeFeatureUsagePattern(usageData: Record<string, number>): FeatureUsagePattern {
   if (!usageData || typeof usageData !== 'object') {
     return { pattern: 'unknown', frequency: 0 };
   }
@@ -101,7 +101,7 @@ export function analyzeFeatureUsagePattern(usageData: any): FeatureUsagePattern 
   return { pattern: maxEntry[0], frequency: maxEntry[1] };
 }
 
-export function identifyReportingStatus(data: any): SubmissionStatus {
+export function identifyReportingStatus(data: Partial<SubmissionStatus>): SubmissionStatus {
   if (!data || typeof data !== 'object') {
     return {
       all_submitted: false,
@@ -126,7 +126,7 @@ export function identifyReportingStatus(data: any): SubmissionStatus {
   };
 }
 
-export function executePromptionLoop(data: any): AuditEvent {
+export function executePromptionLoop(data: Partial<AuditEvent>): AuditEvent {
   if (!data || typeof data !== 'object') {
     return {
       event_id: '',
@@ -162,7 +162,7 @@ export function executePromptionLoop(data: any): AuditEvent {
   };
 }
 
-export function formatReportListWithPagination(data: any): DailyReport {
+export function formatReportListWithPagination(data: Partial<DailyReport>): DailyReport {
   if (!data || typeof data !== 'object') {
     return {
       yesterday_achievement: '',
@@ -192,7 +192,7 @@ export function sendPromptionEmailToDepartmentHead(message: EmailMessage): Promp
   };
 }
 
-export function logSentMessage(data: any): MessageLog {
+export function logSentMessage(data: Partial<MessageLog>): MessageLog {
   if (!data || typeof data !== 'object') {
     return {
       id: '',
@@ -208,7 +208,7 @@ export function logSentMessage(data: any): MessageLog {
   };
 }
 
-export function analyzeEscalationCondition(data: any): EscalationAnalysis {
+export function analyzeEscalationCondition(data: Partial<EscalationAnalysis>): EscalationAnalysis {
   if (!data || typeof data !== 'object') {
     return {
       escalation_condition: 'unknown',
@@ -250,7 +250,7 @@ export function buildPromptionContext(data: PromptionContext): PromptionContext 
   };
 }
 
-export function executePromptionAction(data: any): PromptionAction {
+export function executePromptionAction(data: Partial<PromptionAction>): PromptionAction {
   if (!data || typeof data !== 'object') {
     return {
       action: '',
